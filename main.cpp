@@ -24,6 +24,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <string>
+#include <stdexcept>
 
 // ====================================================== HEADER FILES ======================================================
 
@@ -33,9 +34,16 @@ int main() {
     int windowHeight = 720;
 
     sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Insert Game Name");
-    sf::CircleShape shape(200.f);
-    shape.setFillColor(sf::Color::Green);
 
+    // Test Spriting
+    sf::Texture texture;
+    if (!texture.loadFromFile("Sprites/Player.png")) return -1;
+
+    sf::Sprite sprite;
+    sprite.setTexture(texture);
+    
+    sprite.setOrigin(16,16);
+    
     // Infinite loop for when the window is open
     while (window.isOpen()) {
         sf::Event event;
@@ -45,34 +53,29 @@ int main() {
             if (event.type == sf::Event::Closed)
                 window.close();
         }
-
-        /*window.clear();
-        window.draw(shape);
-        window.display();*/
-
+        window.clear(sf::Color::Black);
+        window.draw(sprite);
         // Input tests
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {std::cout << "A Key Pressed!\n";}
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {std::cout << "D Key Pressed!\n";}
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {std::cout << "W Key Pressed!\n";}
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {std::cout << "S Key Pressed!\n";}
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) sprite.rotate(-0.5);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) sprite.rotate(0.5);
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) std::cout << "W Key Pressed!\n";
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) std::cout << "S Key Pressed!\n";
 
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-            std::cout << "Left Mouse Press!\n";
-        }
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) {
-            std::cout << "Right Mouse Press!\n";
-        }
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) std::cout << "Left Mouse Press!\n";
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) std::cout << "Right Mouse Press!\n";
 
         // Check Mouse Position and Limit Range
         sf::Vector2i localPosition = sf::Mouse::getPosition(window);
-        if (localPosition.x < 0) {localPosition.x = 0;}
-        if (localPosition.y < 0) {localPosition.y = 0;}
+        if (localPosition.x < 0) localPosition.x = 0;
+        if (localPosition.y < 0) localPosition.y = 0;
 
-        if (localPosition.x > windowWidth) {localPosition.x = windowWidth;}
-        if (localPosition.y > windowHeight) {localPosition.y = windowHeight;}
-
+        if (localPosition.x > windowWidth) localPosition.x = windowWidth;
+        if (localPosition.y > windowHeight) localPosition.y = windowHeight;
+        sprite.setPosition(localPosition.x, localPosition.y);
         //std::cout << "X Position: " << std::to_string(localPosition.x) << "\n";
-        std::cout << "Y Position: " << std::to_string(localPosition.y) << "\n";
+        //std::cout << "Y Position: " << std::to_string(localPosition.y) << "\n";
+
+        window.display();
     }
     return 0;
 }
