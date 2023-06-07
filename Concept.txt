@@ -1,0 +1,10 @@
+Game Name:
+
+Shoot 'Em Up Platformer Game
+
+Time based speedrunning platformer where the premise is to run, get to the end and shoot all the enemies with a gun.
+
+Momentum based, fast responsive controls, rocket jumping
+
+Essentially one of the kinds of games where the skill floor is low but skill ceiling is high
+
