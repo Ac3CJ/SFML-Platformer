@@ -8,16 +8,16 @@
 // =================================================================================================================
 
 // ===================================================== TO DO =====================================================
-// 1. Get the inputs from mouse
-// 2. Get inputs from keyboard
 // 3. Set up input keys
-// 4. Get sprites
 // 5. Get tile maps
 // 6. Set up Player object
 // 7. Set up Entity object
 // 8. Set up collision objects
 // 9. Pray for no memory leaks
 // 10. Set up Delta Time
+// 11. Get clicking to change the colour of the cursor
+// 12. Get a gun sprite to point to the cursor
+// 13. Find a way to set up the map collision objects
 // =================================================================================================================
 
 // ====================================================== LIBRARIES ======================================================
@@ -28,12 +28,23 @@
 
 // ====================================================== HEADER FILES ======================================================
 
+// ====================================================== SYSTEM VARIABLES ======================================================
+int fpsCap = 144,
+    tickRate = 60;
+
+// ====================================================== FUNCTIONS ======================================================
+int deltaTime(int previous, int offset) {
+    return (clock() - previous) + offset;
+}
+
 // ====================================================== CLASSES ======================================================
 class Entity {
     protected:
         sf::Texture texture;
         sf::Sprite sprite;
         std::string spriteFileName;
+        int spriteWidth;
+        int spriteHeight;
 
         void InitialiseSprite();
     public:
@@ -53,7 +64,10 @@ Entity::~Entity() {
 void Entity::InitialiseSprite() {
     if (!texture.loadFromFile(spriteFileName)) throw "Sprite File Not Found";
     sprite.setTexture(texture);
-    sprite.setOrigin(16,16);
+    
+    sf::FloatRect spriteLocalBounds = sprite.getLocalBounds();
+    spriteWidth = spriteLocalBounds.width;
+    spriteHeight = spriteLocalBounds.height;
 }
 
 sf::Sprite Entity::GetSprite() {
@@ -64,10 +78,19 @@ void Entity::DrawSprite(sf::RenderWindow *window){
     window->draw(sprite);
 }
 
+// =======================================================================================
+// =======================================================================================
 class Player : public Entity {
+    private:
+        float positionX;
+        float positionY;
+
     public:
         Player();
         ~Player();
+
+        void UpdateSprite();
+        void UpdatePosition(int windowWidth, int windowHeight);
 };
 
 Player::Player() {
@@ -78,43 +101,85 @@ Player::Player() {
 Player::~Player() {
 }
 
+void Player::UpdateSprite() {
+    sprite.setPosition(positionX, positionY);
+}
+
+void Player::UpdatePosition(int windowWidth, int windowHeight) {
+    float velocityX, velocityY;
+    bool moveLeft, moveRight, moveUp, moveDown;
+
+    moveLeft = sf::Keyboard::isKeyPressed(sf::Keyboard::A);
+    moveRight = sf::Keyboard::isKeyPressed(sf::Keyboard::D);
+    moveUp = sf::Keyboard::isKeyPressed(sf::Keyboard::W);
+    moveDown = sf::Keyboard::isKeyPressed(sf::Keyboard::S);
+
+    if (positionX <= 0) moveLeft = 0;
+    if (positionX >= (windowWidth - spriteWidth)) moveRight = 0;
+    if (positionY <= 0) moveUp = 0;
+    if (positionY >= (windowHeight - spriteHeight)) moveDown = 0;
+
+    velocityX = moveRight - moveLeft;
+    velocityY = moveDown - moveUp;
+    positionX = positionX + velocityX;
+    positionY = positionY + velocityY;
+
+    UpdateSprite();
+}
+
+// =======================================================================================
+// =======================================================================================
 class Cursor : public Entity{
+    private:
+        int positionX;
+        int positionY;
+
     public:
         Cursor();
         ~Cursor();
 
-        void UpdatePosition(int localPositionX, int localPositionY);
+        void UpdateSprite();
+        void UpdatePosition(sf::RenderWindow* window, int windowWidth, int windowHeight);
 };
 
 Cursor::Cursor() {
     spriteFileName = "Sprites/Cursor.png";
     InitialiseSprite();
+    sprite.setOrigin(16,16);
 }
 
 Cursor::~Cursor() {
 }
 
-void Cursor::UpdatePosition(int localPositionX, int localPositionY) {
-    sprite.setPosition(localPositionX, localPositionY);
+void Cursor::UpdateSprite() {
+    sprite.setPosition(positionX, positionY);
 }
 
+void Cursor::UpdatePosition(sf::RenderWindow* window, int windowWidth, int windowHeight) {
+    sf::Vector2i localPosition = sf::Mouse::getPosition(*window);
+    if (localPosition.x < 0) localPosition.x = 0;
+    if (localPosition.y < 0) localPosition.y = 0;
+
+    if (localPosition.x > windowWidth) localPosition.x = windowWidth;
+    if (localPosition.y > windowHeight) localPosition.y = windowHeight;
+
+    positionX = localPosition.x;
+    positionY = localPosition.y;
+
+    UpdateSprite();
+}
 
 // ====================================================== MAIN ======================================================
 int main() {
-    int windowWidth = 1280;
-    int windowHeight = 720;
+    int windowWidth = 1280,
+        windowHeight = 720,
+        previousTime = clock(),
+        offset = 0;
 
     sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Insert Game Name");
 
     Cursor cursorObject;
-    // Test Spriting
-    /*sf::Texture texture;
-    if (!texture.loadFromFile("Sprites/Cursor.png")) return -1;
-
-    sf::Sprite sprite;
-    sprite.setTexture(texture);
-    
-    sprite.setOrigin(16,16);*/
+    Player playerObject;
     
     // Infinite loop for when the window is open
     while (window.isOpen()) {
@@ -125,34 +190,25 @@ int main() {
             if (event.type == sf::Event::Closed)
                 window.close();
         }
-        
+    
         window.clear(sf::Color::Black);
-        //window.draw(sprite);
-        //window.draw(cursorObject.GetSprite());
         cursorObject.DrawSprite(&window);
-
-        // Input tests
-        //if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) sprite.rotate(-0.5);
-        //if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) sprite.rotate(0.5);
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) std::cout << "W Key Pressed!\n";
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) std::cout << "S Key Pressed!\n";
+        playerObject.DrawSprite(&window);
 
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) std::cout << "Left Mouse Press!\n";
         if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) std::cout << "Right Mouse Press!\n";
+        
+        // Delta Time
+        int deltaT = deltaTime(previousTime, offset);
+        previousTime = clock();
+        for (int i; i < (deltaT*tickRate)/1000; i++){
+            cursorObject.UpdatePosition(&window, windowWidth, windowHeight);
+            playerObject.UpdatePosition(windowWidth, windowHeight);
+            std::cout << "TEST" << std::endl;
+        }
 
-        // Check Mouse Position and Limit Range
-        sf::Vector2i localPosition = sf::Mouse::getPosition(window);
-        if (localPosition.x < 0) localPosition.x = 0;
-        if (localPosition.y < 0) localPosition.y = 0;
-
-        if (localPosition.x > windowWidth) localPosition.x = windowWidth;
-        if (localPosition.y > windowHeight) localPosition.y = windowHeight;
-
-        cursorObject.UpdatePosition(localPosition.x, localPosition.y);
-        //sprite.setPosition(localPosition.x, localPosition.y);
-        //std::cout << "X Position: " << std::to_string(localPosition.x) << "\n";
-        //std::cout << "Y Position: " << std::to_string(localPosition.y) << "\n";
-
+        offset = deltaT % (1000/tickRate);
+    
         window.display();
     }
     return 0;
