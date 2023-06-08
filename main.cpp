@@ -28,6 +28,77 @@
 
 // ====================================================== HEADER FILES ======================================================
 
+// ====================================================== CLASSES ======================================================
+class Entity {
+    protected:
+        sf::Texture texture;
+        sf::Sprite sprite;
+        std::string spriteFileName;
+
+        void InitialiseSprite();
+    public:
+        Entity();
+        ~Entity();
+
+        sf::Sprite GetSprite();
+        void DrawSprite(sf::RenderWindow* window);
+};
+
+Entity::Entity() {
+}
+
+Entity::~Entity() {
+}
+
+void Entity::InitialiseSprite() {
+    if (!texture.loadFromFile(spriteFileName)) throw "Sprite File Not Found";
+    sprite.setTexture(texture);
+    sprite.setOrigin(16,16);
+}
+
+sf::Sprite Entity::GetSprite() {
+    return sprite;
+}
+
+void Entity::DrawSprite(sf::RenderWindow *window){
+    window->draw(sprite);
+}
+
+class Player : public Entity {
+    public:
+        Player();
+        ~Player();
+};
+
+Player::Player() {
+    spriteFileName = "Sprites/Player.png";
+    InitialiseSprite();
+}
+
+Player::~Player() {
+}
+
+class Cursor : public Entity{
+    public:
+        Cursor();
+        ~Cursor();
+
+        void UpdatePosition(int localPositionX, int localPositionY);
+};
+
+Cursor::Cursor() {
+    spriteFileName = "Sprites/Cursor.png";
+    InitialiseSprite();
+}
+
+Cursor::~Cursor() {
+}
+
+void Cursor::UpdatePosition(int localPositionX, int localPositionY) {
+    sprite.setPosition(localPositionX, localPositionY);
+}
+
+
 // ====================================================== MAIN ======================================================
 int main() {
     int windowWidth = 1280;
@@ -35,14 +106,15 @@ int main() {
 
     sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Insert Game Name");
 
+    Cursor cursorObject;
     // Test Spriting
-    sf::Texture texture;
-    if (!texture.loadFromFile("Sprites/Player.png")) return -1;
+    /*sf::Texture texture;
+    if (!texture.loadFromFile("Sprites/Cursor.png")) return -1;
 
     sf::Sprite sprite;
     sprite.setTexture(texture);
     
-    sprite.setOrigin(16,16);
+    sprite.setOrigin(16,16);*/
     
     // Infinite loop for when the window is open
     while (window.isOpen()) {
@@ -53,11 +125,15 @@ int main() {
             if (event.type == sf::Event::Closed)
                 window.close();
         }
+        
         window.clear(sf::Color::Black);
-        window.draw(sprite);
+        //window.draw(sprite);
+        //window.draw(cursorObject.GetSprite());
+        cursorObject.DrawSprite(&window);
+
         // Input tests
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) sprite.rotate(-0.5);
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) sprite.rotate(0.5);
+        //if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) sprite.rotate(-0.5);
+        //if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) sprite.rotate(0.5);
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) std::cout << "W Key Pressed!\n";
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) std::cout << "S Key Pressed!\n";
 
@@ -71,7 +147,9 @@ int main() {
 
         if (localPosition.x > windowWidth) localPosition.x = windowWidth;
         if (localPosition.y > windowHeight) localPosition.y = windowHeight;
-        sprite.setPosition(localPosition.x, localPosition.y);
+
+        cursorObject.UpdatePosition(localPosition.x, localPosition.y);
+        //sprite.setPosition(localPosition.x, localPosition.y);
         //std::cout << "X Position: " << std::to_string(localPosition.x) << "\n";
         //std::cout << "Y Position: " << std::to_string(localPosition.y) << "\n";
 
