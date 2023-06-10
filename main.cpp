@@ -30,7 +30,7 @@
 
 // ====================================================== SYSTEM VARIABLES ======================================================
 int fpsCap = 144,
-    tickRate = 60;
+    tickRate = 30;
 
 // ====================================================== FUNCTIONS ======================================================
 int deltaTime(int previous, int offset) {
@@ -172,9 +172,7 @@ void Cursor::UpdatePosition(sf::RenderWindow* window, int windowWidth, int windo
 // ====================================================== MAIN ======================================================
 int main() {
     int windowWidth = 1280,
-        windowHeight = 720,
-        previousTime = clock(),
-        offset = 0;
+        windowHeight = 720;
 
     sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Insert Game Name");
 
@@ -198,16 +196,8 @@ int main() {
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) std::cout << "Left Mouse Press!\n";
         if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) std::cout << "Right Mouse Press!\n";
         
-        // Delta Time
-        int deltaT = deltaTime(previousTime, offset);
-        previousTime = clock();
-        for (int i; i < (deltaT*tickRate)/1000; i++){
-            cursorObject.UpdatePosition(&window, windowWidth, windowHeight);
-            playerObject.UpdatePosition(windowWidth, windowHeight);
-            std::cout << "TEST" << std::endl;
-        }
-
-        offset = deltaT % (1000/tickRate);
+        cursorObject.UpdatePosition(&window, windowWidth, windowHeight);
+        playerObject.UpdatePosition(windowWidth, windowHeight);
     
         window.display();
     }
