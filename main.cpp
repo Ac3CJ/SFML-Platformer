@@ -8,14 +8,13 @@
 // =================================================================================================================
 
 // ===================================================== TO DO =====================================================
-// 3. Set up input keys
+// 3. Set up input keys WIP
 // 5. Get tile maps
 // 6. Set up Player object
 // 7. Set up Entity object
 // 8. Set up collision objects
 // 9. Pray for no memory leaks
-// 10. Set up Delta Time
-// 11. Get clicking to change the colour of the cursor
+// 10. Set up Delta Time WIP
 // 12. Get a gun sprite to point to the cursor
 // 13. Find a way to set up the map collision objects
 // =================================================================================================================
@@ -31,11 +30,6 @@
 // ====================================================== SYSTEM VARIABLES ======================================================
 int fpsCap = 144,
     tickRate = 30;
-
-// ====================================================== FUNCTIONS ======================================================
-int deltaTime(int previous, int offset) {
-    return (clock() - previous) + offset;
-}
 
 // ====================================================== CLASSES ======================================================
 class Entity {
@@ -169,10 +163,17 @@ void Cursor::UpdatePosition(sf::RenderWindow* window, int windowWidth, int windo
     UpdateSprite();
 }
 
+// ====================================================== FUNCTIONS ======================================================
+int deltaTime(int previous) {
+    return (clock() - previous);
+}
+
 // ====================================================== MAIN ======================================================
 int main() {
     int windowWidth = 1280,
-        windowHeight = 720;
+        windowHeight = 720,
+        offset = 0,
+        previousTime = 0;
 
     sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), "Insert Game Name");
 
@@ -192,12 +193,17 @@ int main() {
         window.clear(sf::Color::Black);
         cursorObject.DrawSprite(&window);
         playerObject.DrawSprite(&window);
+        int delta = deltaTime(previousTime) + offset;
+        previousTime = clock();
 
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) std::cout << "Left Mouse Press!\n";
         if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) std::cout << "Right Mouse Press!\n";
         
-        cursorObject.UpdatePosition(&window, windowWidth, windowHeight);
-        playerObject.UpdatePosition(windowWidth, windowHeight);
+        for (int i = 0; i < delta / tickRate; i++) {
+            cursorObject.UpdatePosition(&window, windowWidth, windowHeight);
+            playerObject.UpdatePosition(windowWidth, windowHeight);
+        }
+        offset = delta % tickRate;
     
         window.display();
     }
