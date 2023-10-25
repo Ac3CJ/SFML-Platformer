@@ -1,23 +1,27 @@
 {
-  "configurations": [
-    {
-      "name": "windows-clang-x64",
-      "includePath": [
-        "${workspaceFolder}/**",
-        "C:\\C++ Libraries\\SFML-2.5.1\\include"
-      ],
-      "defines": [
-        "_DEBUG",
-        "UNICODE",
-        "_UNICODE"
-      ],
-      "windowsSdkVersion": "10.0.19041.0",
-      "compilerPath": "cl.exe",
-      "cStandard": "c17",
-      "cppStandard": "c++17",
-      "intelliSenseMode": "windows-clang-x64",
-      "configurationProvider": "ms-vscode.makefile-tools"
-    }
-  ],
-  "version": 4
+    "configurations": [
+        {
+            "name": "windows-clang-x64",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "C:\\C++ Libraries\\SFML-2.5.1\\include",
+                "C:/C++ Libraries/SFML-2.5.1/include",
+                "C:\\Users\\conra\\OneDrive - University of Bath\\Documents\\_Projects\\SFML-Platformer",
+                "C:/Users/conra/OneDrive - University of Bath/Documents/_Projects/SFML-Platformer"
+            ],
+            "defines": [
+                "_DEBUG",
+                "UNICODE",
+                "_UNICODE"
+            ],
+            "windowsSdkVersion": "10.0.19041.0",
+            //"compilerPath": "cl.exe",
+            "cStandard": "c17",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "clang-x64",
+            //"configurationProvider": "ms-vscode.makefile-tools"
+            "configurationProvider": "ms-vscode.cpptools"
+        }
+    ],
+    "version": 4
 }

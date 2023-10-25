@@ -24,54 +24,14 @@
 #include <stdexcept>
 
 // ====================================================== HEADER FILES ======================================================
+#include "Entity.h"
 
 // ====================================================== SYSTEM VARIABLES ======================================================
 const int fpsCap = 144,
           tickRate = 30;
 
 // ====================================================== CLASSES ======================================================
-class Entity {
-    protected:
-        sf::Texture texture;
-        sf::Sprite sprite;
-        std::string spriteFileName;
-        int spriteWidth;
-        int spriteHeight;
 
-        void InitialiseSprite();
-    public:
-        Entity();
-        ~Entity();
-
-        sf::Sprite GetSprite();
-        void DrawSprite(sf::RenderWindow* window);
-};
-
-Entity::Entity() {
-}
-
-Entity::~Entity() {
-}
-
-void Entity::InitialiseSprite() {
-    if (!texture.loadFromFile(spriteFileName)) throw "Sprite File Not Found";
-    sprite.setTexture(texture);
-    
-    sf::FloatRect spriteLocalBounds = sprite.getLocalBounds();
-    spriteWidth = spriteLocalBounds.width;
-    spriteHeight = spriteLocalBounds.height;
-}
-
-sf::Sprite Entity::GetSprite() {
-    return sprite;
-}
-
-void Entity::DrawSprite(sf::RenderWindow *window){
-    window->draw(sprite);
-}
-
-// =======================================================================================
-// =======================================================================================
 class Player : public Entity {
     private:
         float positionX;
