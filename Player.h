@@ -8,8 +8,8 @@
 
 class Player : public Entity {
     private:
-        float positionX;
-        float positionY;
+        float positionX, positionY;
+        bool moveLeft, moveRight, moveUp, moveDown, jump, previousJump;
 
     public:
         Player();

@@ -15,20 +15,38 @@ void Player::UpdateSprite() {
 
 void Player::UpdatePosition(int windowWidth, int windowHeight) {
     float velocityX, velocityY;
-    bool moveLeft, moveRight, moveUp, moveDown;
-
     moveLeft = sf::Keyboard::isKeyPressed(sf::Keyboard::A);
     moveRight = sf::Keyboard::isKeyPressed(sf::Keyboard::D);
-    moveUp = sf::Keyboard::isKeyPressed(sf::Keyboard::W);
-    moveDown = sf::Keyboard::isKeyPressed(sf::Keyboard::S);
+    //moveUp = sf::Keyboard::isKeyPressed(sf::Keyboard::W);
+    //moveDown = sf::Keyboard::isKeyPressed(sf::Keyboard::S);
 
-    if (positionX <= 0) moveLeft = 0;
-    if (positionX >= (windowWidth - spriteWidth)) moveRight = 0;
-    if (positionY <= 0) moveUp = 0;
-    if (positionY >= (windowHeight - spriteHeight)) moveDown = 0;
+    jump = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
+
+    velocityY += 5;
+
+    if (positionX <= 0) {
+        moveLeft = 0;
+        velocityX = 0;
+    }
+    if (positionX >= (windowWidth - spriteWidth)) {
+        velocityX = 0;
+        moveRight = 0;
+    }
+    if (positionY <= 0) {
+        moveUp = 0;
+    }
+    if (positionY >= (windowHeight - spriteHeight)) {
+        velocityY = 0;
+        moveDown = 0;
+    }
 
     velocityX = (moveRight - moveLeft) * 10;
-    velocityY = (moveDown - moveUp) * 10;
+    //velocityY = (moveDown - moveUp) * 10;
+    if (previousJump != jump) {
+        previousJump = jump;
+        velocityY -= (jump*200);
+    }
+
     positionX = positionX + velocityX;
     positionY = positionY + velocityY;
 
