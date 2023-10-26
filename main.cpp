@@ -12,7 +12,6 @@
 // 7. Set up Entity object
 // 8. Set up collision objects
 // 9. Pray for no memory leaks
-// 10. Set up Delta Time WIP
 // 12. Get a gun sprite to point to the cursor
 // 13. Find a way to set up the map collision objects
 // =================================================================================================================
@@ -26,53 +25,11 @@
 // ====================================================== HEADER FILES ======================================================
 #include "Entity.h"
 #include "Player.h"
+#include "Cursor.h"
 
 // ====================================================== SYSTEM VARIABLES ======================================================
 const int fpsCap = 144,
           tickRate = 30;
-
-// ====================================================== CLASSES ======================================================
-// =======================================================================================
-// =======================================================================================
-class Cursor : public Entity{
-    private:
-        int positionX;
-        int positionY;
-
-    public:
-        Cursor();
-        ~Cursor();
-
-        void UpdateSprite();
-        void UpdatePosition(sf::RenderWindow* window, int windowWidth, int windowHeight);
-};
-
-Cursor::Cursor() {
-    spriteFileName = "Sprites/Cursor.png";
-    InitialiseSprite();
-    sprite.setOrigin(16,16);
-}
-
-Cursor::~Cursor() {
-}
-
-void Cursor::UpdateSprite() {
-    sprite.setPosition(positionX, positionY);
-}
-
-void Cursor::UpdatePosition(sf::RenderWindow* window, int windowWidth, int windowHeight) {
-    sf::Vector2i localPosition = sf::Mouse::getPosition(*window);
-    if (localPosition.x < 0) localPosition.x = 0;
-    if (localPosition.y < 0) localPosition.y = 0;
-
-    if (localPosition.x > windowWidth) localPosition.x = windowWidth;
-    if (localPosition.y > windowHeight) localPosition.y = windowHeight;
-
-    positionX = localPosition.x;
-    positionY = localPosition.y;
-
-    UpdateSprite();
-}
 
 // ====================================================== FUNCTIONS ======================================================
 int deltaTime(int previous) {
@@ -110,6 +67,7 @@ int main() {
         if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) std::cout << "Left Mouse Press!\n";
         if (sf::Mouse::isButtonPressed(sf::Mouse::Right)) std::cout << "Right Mouse Press!\n";
         
+        // Delta Time Shenanigans
         for (int i = 0; i < delta / tickRate; i++) {
             cursorObject.UpdatePosition(&window, windowWidth, windowHeight);
             playerObject.UpdatePosition(windowWidth, windowHeight);
