@@ -1,5 +1,6 @@
 #include "Player.h"
 #include <SFML/Graphics.hpp>
+#include <iostream>
 
 Player::Player() {
     spriteFileName = "Sprites/Player.png";
@@ -11,6 +12,7 @@ Player::~Player() {
 
 void Player::UpdateSprite() {
     sprite.setPosition(positionX, positionY);
+    //std::cout << "Y Pos: " << positionY << "\n";
 }
 
 void Player::UpdatePosition(int windowWidth, int windowHeight) {
@@ -22,8 +24,9 @@ void Player::UpdatePosition(int windowWidth, int windowHeight) {
 
     jump = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
 
-    velocityY += gravityAcceleration;
+    gravityVelocity += gravityAcceleration;
 
+    // Limits
     if (positionX <= 0) {
         moveLeft = 0;
         velocityX = 0;
@@ -35,20 +38,28 @@ void Player::UpdatePosition(int windowWidth, int windowHeight) {
     if (positionY <= 0) {
         moveUp = 0;
     }
+
     if (positionY >= (windowHeight - spriteHeight)) {
-        velocityY = 0;
-        moveDown = 0;
+        gravityVelocity = 0; 
+        playerVelocityY = 0;
         jumpCheck = true;
     }
 
-    velocityX = (moveRight - moveLeft) * horizontalAccceleration;
     if (jumpCheck == true & jump == true) {
         jumpCheck = false;
-        velocityY += jumpAcceleration;
+        playerAccelerationY = jumpAcceleration;
     }
+    else {playerAccelerationY = 0;}
+
+    // Velocity Calculations
+    playerVelocityY += playerAccelerationY;
+
+    totalVelocityY = playerVelocityY + gravityVelocity;
+
+    velocityX = (moveRight - moveLeft) * horizontalAccceleration;
 
     positionX = positionX + velocityX;
-    positionY = positionY + velocityY;
+    positionY += totalVelocityY;
 
     UpdateSprite();
 }
