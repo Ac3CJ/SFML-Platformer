@@ -13,21 +13,25 @@ class Player : public Entity {
         float positionY = 500;
 
         // Movement Scalars and Maximum (REMEMBER THAT NEGATIVE VALUES GO UP AND LEFT)
-        float horizontalAccceleration = 1;
+        float horizontalAccceleration = 4;
         float jumpAcceleration = -20;
 
-        float horizontalVelocityMax = 10;
+        float horizontalVelocityMax = 20;
         float verticalVelocityMax = 10;
 
-        float gravityAcceleration = 1;
+        // Resistive Forces
+        float gravityAcceleration = 2;
+        float frictionAcceleration = 2;
+
+        float frictionMax = 5;
 
         // Movement Variables
         float playerVelocityY = 0, gravityVelocity = 0, totalVelocityY = 0;
-        float playerVelocityX = 0, totalVelocityX = 0;
+        float playerVelocityX = 0, totalVelocityX = 0, frictionVelocity = 0;
 
         float playerAccelerationY = 0, playerAccelerationX = 0;
         // Movement Booleans
-        bool moveLeft, moveRight, moveUp, moveDown, jump;
+        bool moveLeft, moveRight, moveUp, moveDown, jump, horizontalMovementCheck;
         bool jumpCheck = false;
 
     public:

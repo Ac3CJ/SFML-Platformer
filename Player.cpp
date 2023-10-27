@@ -16,27 +16,31 @@ void Player::UpdateSprite() {
 }
 
 void Player::UpdatePosition(int windowWidth, int windowHeight) {
-    float velocityX, velocityY;
     moveLeft = sf::Keyboard::isKeyPressed(sf::Keyboard::A);
     moveRight = sf::Keyboard::isKeyPressed(sf::Keyboard::D);
     //moveUp = sf::Keyboard::isKeyPressed(sf::Keyboard::W);
     //moveDown = sf::Keyboard::isKeyPressed(sf::Keyboard::S);
 
+    horizontalMovementCheck = moveRight | moveLeft;
+
     jump = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
 
     gravityVelocity += gravityAcceleration;
+    playerAccelerationX = horizontalAccceleration;
 
-    // Limits
+    // Apply Window Limits
     if (positionX <= 0) {
         moveLeft = 0;
-        velocityX = 0;
+        playerVelocityX = 0;
+        frictionVelocity = 0;
     }
     if (positionX >= (windowWidth - spriteWidth)) {
-        velocityX = 0;
         moveRight = 0;
+        playerVelocityX = 0;
+        frictionVelocity = 0;
     }
     if (positionY <= 0) {
-        moveUp = 0;
+        playerVelocityY = 0;
     }
 
     if (positionY >= (windowHeight - spriteHeight)) {
@@ -45,20 +49,38 @@ void Player::UpdatePosition(int windowWidth, int windowHeight) {
         jumpCheck = true;
     }
 
+    // Velocity Calculations
     if (jumpCheck == true & jump == true) {
         jumpCheck = false;
         playerAccelerationY = jumpAcceleration;
     }
-    else {playerAccelerationY = 0;}
+    else playerAccelerationY = 0;
 
-    // Velocity Calculations
     playerVelocityY += playerAccelerationY;
 
+    if ((moveRight != moveLeft) && (moveRight == true)) playerVelocityX += playerAccelerationX;
+    if ((moveRight != moveLeft) && (moveLeft == true)) playerVelocityX -= playerAccelerationX;
+
+    if (playerVelocityX > horizontalVelocityMax) playerVelocityX = horizontalVelocityMax;
+    else if (playerVelocityX < -horizontalVelocityMax) playerVelocityX = -horizontalVelocityMax;
+
+    if (horizontalMovementCheck == false) {
+        if (totalVelocityX > 2) frictionVelocity -= frictionAcceleration;
+        else if (totalVelocityX < -2) frictionVelocity += frictionAcceleration;
+        else { 
+            frictionVelocity = 0;
+            playerVelocityX = 0;
+        }
+    }
+    else frictionVelocity = 0;
+
+    // Total Velocity Calculations
     totalVelocityY = playerVelocityY + gravityVelocity;
 
-    velocityX = (moveRight - moveLeft) * horizontalAccceleration;
+    totalVelocityX = playerVelocityX + frictionVelocity;
 
-    positionX = positionX + velocityX;
+    // Update Positions
+    positionX += totalVelocityX;
     positionY += totalVelocityY;
 
     UpdateSprite();
