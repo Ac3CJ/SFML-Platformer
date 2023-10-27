@@ -102,6 +102,7 @@
     "ostream": "cpp",
     "stdexcept": "cpp",
     "streambuf": "cpp",
+
     "typeinfo": "cpp",
     "cstring": "cpp",
     "ios": "cpp",
@@ -121,6 +122,8 @@
     "xtr1common": "cpp",
     "xtree": "cpp",
     "xutility": "cpp"
+    "typeinfo": "cpp"
+
   },
   "C_Cpp_Runner.useLinkTimeOptimization": false,
   "C_Cpp_Runner.msvcSecureNoWarnings": false
