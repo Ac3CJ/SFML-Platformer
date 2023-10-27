@@ -10,18 +10,18 @@ class Player : public Entity {
     private:
         // Positional Variables
         float positionX = 50;
-        float positionY = 500;
+        float positionY = 600;
 
         // Movement Scalars and Maximum (REMEMBER THAT NEGATIVE VALUES GO UP AND LEFT)
         float horizontalAccceleration = 4;
         float jumpAcceleration = -20;
 
         float horizontalVelocityMax = 20;
-        float verticalVelocityMax = 10;
+        float verticalVelocityMax = 100;
 
         // Resistive Forces
-        float gravityAcceleration = 2;
-        float frictionAcceleration = 2;
+        float gravityAcceleration = 1.5;
+        float frictionAcceleration = 1.5;
 
         float frictionMax = 5;
 

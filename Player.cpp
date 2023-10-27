@@ -26,6 +26,8 @@ void Player::UpdatePosition(int windowWidth, int windowHeight) {
     jump = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
 
     gravityVelocity += gravityAcceleration;
+    if (gravityVelocity > verticalVelocityMax) gravityVelocity = verticalVelocityMax;
+    
     playerAccelerationX = horizontalAccceleration;
 
     // Apply Window Limits
@@ -65,6 +67,7 @@ void Player::UpdatePosition(int windowWidth, int windowHeight) {
     else if (playerVelocityX < -horizontalVelocityMax) playerVelocityX = -horizontalVelocityMax;
 
     if (horizontalMovementCheck == false) {
+        playerAccelerationX = 0;
         if (totalVelocityX > 2) frictionVelocity -= frictionAcceleration;
         else if (totalVelocityX < -2) frictionVelocity += frictionAcceleration;
         else { 
