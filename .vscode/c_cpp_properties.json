@@ -5,9 +5,7 @@
         "includePath": [
             "${workspaceFolder}/**",
             "C:\\C++ Libraries\\SFML-2.5.1\\include",
-            "C:/C++ Libraries/SFML-2.5.1/include",
-            "C:\\Users\\conra\\OneDrive - University of Bath\\Documents\\_Projects\\SFML-Platformer",
-            "C:/Users/conra/OneDrive - University of Bath/Documents/_Projects/SFML-Platformer"
+            "C:/C++ Libraries/SFML-2.5.1/include"
         ],
         "defines": [
             "_DEBUG",

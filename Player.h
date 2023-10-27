@@ -13,7 +13,7 @@ class Player : public Entity {
         float positionY = 600;
 
         // Movement Scalars and Maximum (REMEMBER THAT NEGATIVE VALUES GO UP AND LEFT)
-        float horizontalAccceleration = 4;
+        float horizontalAccceleration = 5;
         float jumpAcceleration = -20;
 
         float horizontalVelocityMax = 20;
