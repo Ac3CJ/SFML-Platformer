@@ -8,8 +8,24 @@
 
 class Player : public Entity {
     private:
-        float positionX, positionY;
-        bool moveLeft, moveRight, moveUp, moveDown, jump, previousJump;
+        // Positional Variables
+        float positionX = 50;
+        float positionY = 500;
+
+        // Movement Scalars and Maximum (REMEMBER THAT NEGATIVE VALUES GO UP AND LEFT)
+        float horizontalAccceleration = 10;
+        float jumpAcceleration = -50;
+
+        float horizontalVelocityMax = 10;
+        float verticalVelocityMax = 10;
+
+        float gravityAcceleration = 5;
+
+        // Movement Variables
+        float gravityVelocity, playerVelocityX, playerVelocityY;
+        // Movement Booleans
+        bool moveLeft, moveRight, moveUp, moveDown, jump;
+        bool jumpCheck = false;
 
     public:
         Player();

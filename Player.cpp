@@ -22,7 +22,7 @@ void Player::UpdatePosition(int windowWidth, int windowHeight) {
 
     jump = sf::Keyboard::isKeyPressed(sf::Keyboard::Space);
 
-    velocityY += 5;
+    velocityY += gravityAcceleration;
 
     if (positionX <= 0) {
         moveLeft = 0;
@@ -38,13 +38,13 @@ void Player::UpdatePosition(int windowWidth, int windowHeight) {
     if (positionY >= (windowHeight - spriteHeight)) {
         velocityY = 0;
         moveDown = 0;
+        jumpCheck = true;
     }
 
-    velocityX = (moveRight - moveLeft) * 10;
-    //velocityY = (moveDown - moveUp) * 10;
-    if (previousJump != jump) {
-        previousJump = jump;
-        velocityY -= (jump*200);
+    velocityX = (moveRight - moveLeft) * horizontalAccceleration;
+    if (jumpCheck == true & jump == true) {
+        jumpCheck = false;
+        velocityY += jumpAcceleration;
     }
 
     positionX = positionX + velocityX;
