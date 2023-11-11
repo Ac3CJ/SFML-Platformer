@@ -5,6 +5,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <string>
+#include <ctime>
 
 class Player : public Entity {
     private:
@@ -13,11 +14,12 @@ class Player : public Entity {
         float positionY = 600;
 
         // Movement Scalars and Maximum (REMEMBER THAT NEGATIVE VALUES GO UP AND LEFT)
-        float horizontalAccceleration = 5;
-        float jumpAcceleration = -20;
+        int horizontalAccceleration = 5;
+        int jumpAcceleration = -6;
+        int jumpTicks = 100;
 
-        float horizontalVelocityMax = 20;
-        float verticalVelocityMax = 100;
+        int horizontalVelocityMax = 20;
+        int verticalVelocityMax = 100;
 
         // Resistive Forces
         float gravityAcceleration = 1.5;
@@ -30,9 +32,12 @@ class Player : public Entity {
         float playerVelocityX = 0, totalVelocityX = 0, frictionVelocity = 0;
 
         float playerAccelerationY = 0, playerAccelerationX = 0;
-        // Movement Booleans
+
+        // Other Variables
         bool moveLeft, moveRight, moveUp, moveDown, jump, horizontalMovementCheck;
         bool jumpCheck = false;
+        int jumpTimer = 0;
+        int previousJumpTime = 0;
 
     public:
         Player();
@@ -42,4 +47,4 @@ class Player : public Entity {
         void UpdatePosition(int windowWidth, int windowHeight);
 };
 
-#endif
+#endif // PLAYER_HEADER

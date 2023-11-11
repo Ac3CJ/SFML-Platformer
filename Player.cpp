@@ -1,6 +1,7 @@
 #include "Player.h"
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include <ctime>
 
 Player::Player() {
     spriteFileName = "Sprites/Player.png";
@@ -56,12 +57,17 @@ void Player::UpdatePosition(int windowWidth, int windowHeight) {
     }
 
     // Velocity Calculations
-    if (jumpCheck == true & jump == true) {
-        jumpCheck = false;
+    if (jumpCheck == true & jump == true & ((jumpTicks >= jumpTimer - previousJumpTime))) {
         playerAccelerationY = jumpAcceleration;
+        jumpTimer = clock();
     }
-    else playerAccelerationY = 0;
+    else {
+        jumpCheck = false;
+        playerAccelerationY = 0;
+        previousJumpTime = clock();
+    }
 
+    std::cout << "Player Accel: " << playerAccelerationY << "\n";
     playerVelocityY += playerAccelerationY;
 
     if ((moveRight != moveLeft) && (moveRight == true)) playerVelocityX += playerAccelerationX;
