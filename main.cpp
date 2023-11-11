@@ -58,6 +58,7 @@ int main() {
         window.clear(sf::Color::Black);
         cursorObject.DrawSprite(&window);
         playerObject.DrawSprite(&window);
+
         int delta = deltaTime(previousTime) + offset;
         previousTime = clock();
 

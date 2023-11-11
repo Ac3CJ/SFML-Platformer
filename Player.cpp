@@ -32,20 +32,24 @@ void Player::UpdatePosition(int windowWidth, int windowHeight) {
 
     // Apply Window Limits
     if (positionX <= 0) {
+        positionX = 0;
         moveLeft = 0;
         playerVelocityX = 0;
         frictionVelocity = 0;
     }
     if (positionX >= (windowWidth - spriteWidth)) {
+        positionX = windowWidth - spriteWidth;
         moveRight = 0;
         playerVelocityX = 0;
         frictionVelocity = 0;
     }
     if (positionY <= 0) {
+        positionY = 0;
         playerVelocityY = 0;
     }
 
     if (positionY >= (windowHeight - spriteHeight)) {
+        positionY = windowHeight - spriteHeight;
         gravityVelocity = 0; 
         playerVelocityY = 0;
         jumpCheck = true;
