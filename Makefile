@@ -1,4 +1,4 @@
-all: clean compile link run
+all: clean compile link removeLink run
 
 compile:
 	g++ -c *.cpp -I"C:\C++ Libraries\SFML-2.5.1\include" -DSFML_STATIC
@@ -10,6 +10,9 @@ link:
 
 clean: 
 	rm -f main *.o
+
+removeLink:
+	rm -f *.o
 
 run:
 	.\main.exe

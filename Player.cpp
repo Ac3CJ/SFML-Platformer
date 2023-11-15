@@ -67,7 +67,6 @@ void Player::UpdatePosition(int windowWidth, int windowHeight) {
         previousJumpTime = clock();
     }
 
-    std::cout << "Player Accel: " << playerAccelerationY << "\n";
     playerVelocityY += playerAccelerationY;
 
     if ((moveRight != moveLeft) && (moveRight == true)) playerVelocityX += playerAccelerationX;
